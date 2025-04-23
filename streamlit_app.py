@@ -1,38 +1,32 @@
 import streamlit as st
-
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
-
-
 import openai
 import os
+# ✅ Set up Streamlit page (must be first Streamlit command)
+st.set_page_config(page_title="ChatGPT in Streamlit", layout="centered")
 
-# Configura tu clave API aquí o como variable de entorno
+# ✅ Set your OpenAI API key
 openai.api_key = st.secrets["OPENAI_API_KEY"] if "OPENAI_API_KEY" in st.secrets else os.getenv("OPENAI_API_KEY")
 
-# Título y descripción
-st.set_page_config(page_title="ChatGPT en Streamlit", layout="centered")
+# 🚀 Title and description
 st.title("🤖 ChatGPT Assistant")
-st.markdown("Hazle preguntas a ChatGPT directamente desde esta app.")
+st.markdown("Ask anything, and ChatGPT will reply right here in your browser.")
 
-# Input del usuario
-user_input = st.text_area("Escribe tu pregunta aquí:")
+# 💬 User input
+user_input = st.text_area("Type your question here:")
 
-# Botón de enviar
-if st.button("Enviar") and user_input.strip():
-    with st.spinner("Esperando respuesta de ChatGPT..."):
+# 📤 Submit button
+if st.button("Send") and user_input.strip():
+    with st.spinner("Waiting for ChatGPT to respond..."):
         try:
             response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",  # O "gpt-4" si tienes acceso
+                model="gpt-3.5-turbo",  # You can switch to "gpt-4" if you have access
                 messages=[
-                    {"role": "system", "content": "Eres un asistente útil y conciso."},
+                    {"role": "system", "content": "You are a helpful and concise assistant."},
                     {"role": "user", "content": user_input}
                 ]
             )
             reply = response['choices'][0]['message']['content']
-            st.markdown("**Respuesta de ChatGPT:**")
+            st.markdown("**ChatGPT’s reply:**")
             st.success(reply)
         except Exception as e:
-            st.error(f"Error al contactar con ChatGPT: {e}")
+            st.error(f"Error communicating with ChatGPT: {e}")
